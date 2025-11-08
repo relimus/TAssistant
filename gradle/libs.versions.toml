@@ -1,0 +1,32 @@
+[versions]
+
+# Plugins
+agp = "9.0.0-alpha11"
+kotlin = "2.3.0-Beta2"
+ksp = "2.3.2"
+
+coreKtx = "1.17.0"
+appcompat = "1.7.1"
+material = "1.14.0-alpha06"
+
+# Xposed
+xposed = "82"
+xpHelper = "dcecc33f56"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Xposed
+xposed-api = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed" }
+xphelper = { group = "com.github.suzhelan", name = "XPHelper", version.ref = "xpHelper" }
+
+# KSP
+ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -1,0 +1,5 @@
+<resources>
+    <style name="Base.Theme.TAssistant" parent="Theme.Material3Expressive.DynamicColors.DayNight.NoActionBar">
+
+    </style>
+</resources>
