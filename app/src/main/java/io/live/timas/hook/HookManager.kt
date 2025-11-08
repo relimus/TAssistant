@@ -46,7 +46,7 @@ object HookManager {
      * 直接使用传入的 Hook 实例，无需反射
      */
     private fun loadHookItem(hookInstance: SwitchHook): HookItem {
-        val key = getStorageKey(hookInstance::class.java.simpleName)
+        val key = getStorageKey(hookInstance)
         val isEnabled = getEnabledState(key)
         
         return HookItem(
@@ -64,7 +64,7 @@ object HookManager {
      * 使用缓存优化性能，减少存储访问
      */
     fun isEnabled(hook: SwitchHook): Boolean {
-        val key = getStorageKey(hook::class.java.simpleName)
+        val key = getStorageKey(hook)
         return getEnabledState(key)
     }
     
@@ -74,7 +74,7 @@ object HookManager {
      * @param enabled 是否启用
      */
     fun setEnabled(hook: SwitchHook, enabled: Boolean) {
-        val key = getStorageKey(hook::class.java.simpleName)
+        val key = getStorageKey(hook)
         
         // 更新存储
         configUtils.put(key, enabled)
@@ -108,10 +108,13 @@ object HookManager {
     
     /**
      * 获取存储键
+     * 从 HookRegistry 中直接获取类名，避免反射
      * 格式：{simpleName}_state
      */
-    private fun getStorageKey(simpleName: String): String {
-        return "${simpleName}_state"
+    private fun getStorageKey(hook: SwitchHook): String {
+        val simpleName = HookRegistry.hookClassNames[hook]
+            ?: error("$hook not found in HookRegistry")
+        return simpleName
     }
     
     /**

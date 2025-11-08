@@ -52,6 +52,13 @@ class RegisterToUIProcessor(
                 "import $classFullName"
             }
             
+            // 生成 hookInstances 和 hookClassNames
+            val hookInstancesList = hookClasses.joinToString(",\n") { "        ${it.substringAfterLast(".")}" }
+            val hookClassNamesMap = hookClasses.joinToString(",\n") { classFullName ->
+                val simpleName = classFullName.substringAfterLast(".")
+                "        ${simpleName} to \"$simpleName\""
+            }
+            
             writer.write(
                 """
                 |package io.live.timas.hook.generated
@@ -70,7 +77,15 @@ class RegisterToUIProcessor(
                 |     * 直接引用 Hook object 实例，无需反射
                 |     */
                 |    val hookInstances: List<SwitchHook> = listOf(
-                |${hookClasses.joinToString(",\n") { "        ${it.substringAfterLast(".")}" }}
+                |$hookInstancesList
+                |    )
+                |    
+                |    /**
+                |     * Hook 实例到类名的映射
+                |     * 用于获取 Hook 的类名，避免反射
+                |     */
+                |    val hookClassNames: Map<SwitchHook, String> = mapOf(
+                |$hookClassNamesMap
                 |    )
                 |}
                 |
