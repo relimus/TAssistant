@@ -3,6 +3,7 @@ package io.live.timas.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.materialswitch.MaterialSwitch
 import io.live.timas.R
@@ -43,7 +44,7 @@ class HookAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        
+
         return when (viewType) {
             ViewType.SINGLE.value -> {
                 val binding = PreferenceBasicSingleBinding.inflate(layoutInflater, parent, false)
@@ -75,8 +76,8 @@ class HookAdapter(
      * 基础 ViewHolder
      */
     abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        protected abstract val titleView: android.widget.TextView
-        protected abstract val summaryView: android.widget.TextView
+        protected abstract val titleView: TextView
+        protected abstract val summaryView: TextView
         protected abstract val switchView: MaterialSwitch
 
         /**
@@ -95,11 +96,11 @@ class HookAdapter(
 
             // 关键修复：先移除 listener，避免 ViewHolder 复用时触发不必要的回调
             switchView.setOnCheckedChangeListener(null)
-            
+
             // 设置开关状态
             val isEnabled = HookManager.isEnabled(hookItem.hook)
             switchView.isChecked = isEnabled
-            
+
             // 重新设置开关监听
             switchView.setOnCheckedChangeListener { _, isChecked ->
                 HookManager.setEnabled(hookItem.hook, isChecked)
@@ -113,24 +114,23 @@ class HookAdapter(
      */
     private fun createViewHolder(binding: Any, root: View): BaseViewHolder {
         return object : BaseViewHolder(root) {
-            override val titleView: android.widget.TextView = when (binding) {
+            override val titleView: TextView = when (binding) {
                 is PreferenceBasicSingleBinding -> binding.title
                 is PreferenceBasicTopBinding -> binding.title
                 is PreferenceBasicMidBinding -> binding.title
                 is PreferenceBasicDownBinding -> binding.title
                 else -> throw IllegalArgumentException("Unknown binding type")
             }
-            
-            override val summaryView: android.widget.TextView = when (binding) {
+
+            override val summaryView: TextView = when (binding) {
                 is PreferenceBasicSingleBinding -> binding.summary
                 is PreferenceBasicTopBinding -> binding.summary
                 is PreferenceBasicMidBinding -> binding.summary
                 is PreferenceBasicDownBinding -> binding.summary
                 else -> throw IllegalArgumentException("Unknown binding type")
             }
-            
+
             override val switchView: MaterialSwitch = root.findViewById(R.id.switchWidget)
         }
     }
 }
-

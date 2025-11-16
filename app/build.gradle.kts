@@ -96,7 +96,6 @@ protobuf {
         }
     }
 }
-
 lsparanoid {
     seed = 1209
     classFilter = { true }

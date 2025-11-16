@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TAssistant</string>
+    <string name="about">关于</string>
+    <string name="author">开发团队</string>
 </resources>
