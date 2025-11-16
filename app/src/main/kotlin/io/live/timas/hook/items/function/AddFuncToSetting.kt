@@ -152,8 +152,7 @@ object AddFuncToSetting : SwitchHook() {
                     )
                 }
             item
-        } catch (e: Exception) {
-            XLog.e("创建设置项失败: $e")
+        } catch (_: Exception) {
             null
         }
     }
