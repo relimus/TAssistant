@@ -1,3 +1,5 @@
+val gitCommitHash = getGitHash()
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,7 +17,7 @@ android {
         minSdk = 27
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1.3.$gitCommitHash"
 
         ndk {
             abiFilters.add("arm64-v8a")
@@ -57,6 +59,15 @@ android {
             "--allow-reserved-package-id",
             "--package-id", "0xf2"
         )
+    }
+}
+
+fun getGitHash(): String {
+    return try {
+        val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD").start()
+        process.inputStream.bufferedReader().use { it.readText().trim() }
+    } catch (_: Exception) {
+        "unknown"
     }
 }
 
