@@ -3,7 +3,8 @@ package io.live.timas.hook
 import android.content.Context
 import android.content.ContextWrapper
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
-import io.live.timas.api.TIMContactUpdateListener
+import io.live.timas.hook.manager.ApiItemsManager
+import io.live.timas.hook.manager.HookManager
 import java.lang.reflect.Method
 
 class HookSteps {
@@ -39,8 +40,7 @@ class HookSteps {
             }.getOrNull()
     }
     fun initHook() {
-        InjectSetting.startLoad()
-        TIMContactUpdateListener().startLoad()
+        ApiItemsManager.loadAllApiItems()
         HookManager.loadEnabledHooks()
     }
 }

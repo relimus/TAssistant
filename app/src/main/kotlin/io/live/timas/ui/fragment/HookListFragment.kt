@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.live.timas.annotations.UiCategory
 import io.live.timas.databinding.FragmentHookListBinding
-import io.live.timas.hook.HookManager
+import io.live.timas.hook.manager.HookManager
 import io.live.timas.ui.adapter.HookAdapter
 
 class HookListFragment : Fragment() {

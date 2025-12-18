@@ -6,7 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import com.google.android.material.tabs.TabLayoutMediator
 import io.live.timas.R
 import io.live.timas.databinding.ActivitySettingBinding
-import io.live.timas.hook.HookManager
+import io.live.timas.hook.manager.HookManager
 import io.live.timas.ui.adapter.SettingsPagerAdapter
 import top.sacz.xphelper.activity.BaseActivity
 

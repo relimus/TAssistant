@@ -1,7 +1,7 @@
 package io.live.timas.hook.items.message.core
 
 import io.live.timas.hook.base.XBridge
-import io.live.timas.hook.HookManager
+import io.live.timas.hook.manager.HookManager
 import io.live.timas.hook.items.message.PreventRevokeMsg
 import io.live.timas.hook.utils.XLog
 

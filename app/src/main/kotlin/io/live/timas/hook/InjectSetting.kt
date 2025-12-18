@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import io.live.timas.R
+import io.live.timas.annotations.ApiItems
 import io.live.timas.hook.base.XBridge
 import io.live.timas.hook.utils.XLog
 import io.live.timas.ui.SettingActivity
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 
+@ApiItems
 object InjectSetting : XBridge() {
 
     override fun onHook(ctx: Context, loader: ClassLoader) {

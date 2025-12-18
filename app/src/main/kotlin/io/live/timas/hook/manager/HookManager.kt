@@ -1,4 +1,4 @@
-package io.live.timas.hook
+package io.live.timas.hook.manager
 
 import io.live.timas.hook.base.SwitchHook
 import io.live.timas.hook.generated.HookRegistry
@@ -10,17 +10,17 @@ import top.sacz.xphelper.util.ConfigUtils
  * 负责 Hook 的加载、卸载和状态管理
  */
 object HookManager {
-    
+
     private const val PREF_NAME = "TA_Cache"
     private val configUtils = ConfigUtils(PREF_NAME)
-    
+
     // 性能优化：缓存 Hook 列表，避免重复加载
     @Volatile
     private var cachedHooks: List<HookItem>? = null
-    
+
     // 性能优化：缓存启用状态，减少存储访问
     private val enabledStateCache = mutableMapOf<String, Boolean>()
-    
+
     /**
      * 获取所有 Hook 实例
      * 直接使用 KSP 生成的实例列表，完全无需反射
@@ -40,7 +40,7 @@ object HookManager {
             }
         }
     }
-    
+
     /**
      * 加载单个 Hook 项
      * 直接使用传入的 Hook 实例，无需反射
@@ -48,7 +48,7 @@ object HookManager {
     private fun loadHookItem(hookInstance: SwitchHook): HookItem {
         val key = getStorageKey(hookInstance)
         val isEnabled = getEnabledState(key)
-        
+
         return HookItem(
             hook = hookInstance,
             name = hookInstance.name,
@@ -58,7 +58,7 @@ object HookManager {
             isEnabled = isEnabled
         )
     }
-    
+
     /**
      * 检查 Hook 是否启用
      * 使用缓存优化性能，减少存储访问
@@ -67,7 +67,7 @@ object HookManager {
         val key = getStorageKey(hook)
         return getEnabledState(key)
     }
-    
+
     /**
      * 设置 Hook 启用状态
      * @param hook Hook 实例
@@ -75,13 +75,13 @@ object HookManager {
      */
     fun setEnabled(hook: SwitchHook, enabled: Boolean) {
         val key = getStorageKey(hook)
-        
+
         // 更新存储
         configUtils.put(key, enabled)
-        
+
         // 更新缓存
         enabledStateCache[key] = enabled
-        
+
         // 如果不需要重启，立即加载或卸载
         if (!hook.needRestart) {
             if (enabled) {
@@ -90,11 +90,11 @@ object HookManager {
                 hook.unload()
             }
         }
-        
+
         // 清除 Hook 列表缓存，强制下次重新加载以更新状态
         invalidateHooksCache()
     }
-    
+
     /**
      * 初始化时加载所有已启用的 Hooks
      */
@@ -105,7 +105,7 @@ object HookManager {
             }
         }
     }
-    
+
     /**
      * 获取存储键
      * 从 HookRegistry 中直接获取类名，避免反射
@@ -116,7 +116,7 @@ object HookManager {
             ?: error("$hook not found in HookRegistry")
         return simpleName
     }
-    
+
     /**
      * 获取启用状态（带缓存）
      */
@@ -127,7 +127,7 @@ object HookManager {
             state
         }
     }
-    
+
     /**
      * 清除 Hook 列表缓存
      * 在状态变更时调用，确保下次获取时使用最新状态
@@ -136,6 +136,3 @@ object HookManager {
         cachedHooks = null
     }
 }
-
-
-

@@ -11,7 +11,7 @@ import io.live.timas.databinding.PreferenceBasicDownBinding
 import io.live.timas.databinding.PreferenceBasicMidBinding
 import io.live.timas.databinding.PreferenceBasicSingleBinding
 import io.live.timas.databinding.PreferenceBasicTopBinding
-import io.live.timas.hook.HookManager
+import io.live.timas.hook.manager.HookManager
 import io.live.timas.ui.model.HookItem
 
 /**
