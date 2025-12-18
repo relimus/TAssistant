@@ -11,6 +11,7 @@ import io.live.timas.api.TIMMessageViewListener
 import io.live.timas.api.TIMMsgViewAdapter
 import io.live.timas.hook.base.SwitchHook
 import io.live.timas.hook.items.message.core.PreventRevokeMsgCore
+import io.live.timas.hook.utils.cast
 import top.sacz.xphelper.ext.toClass
 import top.sacz.xphelper.reflect.ClassUtils
 import top.sacz.xphelper.reflect.ConstructorUtils
@@ -40,8 +41,8 @@ object PreventRevokeMsg : SwitchHook() {
                 ByteArray::class.java,
                 "com.tencent.qqnt.kernel.nativeinterface.PushExtraInfo".toClass()
             ).first().hookBefore {
-                val cmd = args[0] as String
-                val protoBuf = args[1] as ByteArray
+                val cmd = args[0].cast<String>()
+                val protoBuf = args[1].cast<ByteArray>()
                 if (cmd == "trpc.msg.register_proxy.RegisterProxy.InfoSyncPush") {
                     PreventRevokeMsgCore.handleInfoSyncPush(protoBuf, this)
                 } else if (cmd == "trpc.msg.olpush.OlPushService.MsgPush") {
@@ -61,7 +62,7 @@ object PreventRevokeMsg : SwitchHook() {
             object : TIMMessageViewListener.OnChatViewUpdateListener {
                 override fun onViewUpdateAfter(msgItemView: View, msgRecord: Any) {
                     //约束布局
-                    val rootView = msgItemView as ViewGroup
+                    val rootView = msgItemView.cast<ViewGroup>()
 
                     //防止有撤回 进群等消息类型
                     if (!TIMMsgViewAdapter.hasContentMessage(rootView)) return
@@ -109,7 +110,7 @@ object PreventRevokeMsg : SwitchHook() {
             ),
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT
-        ) as LayoutParams
+        ).cast<LayoutParams>()
         FieldUtils.create(newLayoutParams)
             .fieldName("startToStart")
             .setFirst(newLayoutParams, parentLayoutId)

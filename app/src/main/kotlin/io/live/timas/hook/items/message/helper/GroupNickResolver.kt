@@ -3,6 +3,7 @@ package io.live.timas.hook.items.message.helper
 import de.robv.android.xposed.XposedHelpers
 import io.live.timas.api.TIMEnvTool
 import io.live.timas.hook.utils.XLog
+import io.live.timas.hook.utils.cast
 import top.sacz.xphelper.ext.toClass
 
 /**
@@ -31,9 +32,9 @@ object GroupNickResolver {
                 ?: return null
 
             val troopNick = (runCatching { XposedHelpers.callMethod(nickInfo, "getTroopNick") }.getOrNull()
-                ?: runCatching { XposedHelpers.getObjectField(nickInfo, "troopNick") }.getOrNull()) as? String
+                ?: runCatching { XposedHelpers.getObjectField(nickInfo, "troopNick") }.getOrNull()).cast<String?>()
             val friendNick = (runCatching { XposedHelpers.callMethod(nickInfo, "getFriendNick") }.getOrNull()
-                ?: runCatching { XposedHelpers.getObjectField(nickInfo, "friendNick") }.getOrNull()) as? String
+                ?: runCatching { XposedHelpers.getObjectField(nickInfo, "friendNick") }.getOrNull()).cast<String?>()
 
             val text = when {
                 !troopNick.isNullOrBlank() -> troopNick

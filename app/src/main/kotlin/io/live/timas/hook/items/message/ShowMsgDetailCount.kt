@@ -4,6 +4,7 @@ import android.content.Context
 import io.live.timas.annotations.RegisterToUI
 import io.live.timas.annotations.UiCategory
 import io.live.timas.hook.base.SwitchHook
+import io.live.timas.hook.utils.cast
 import top.sacz.xphelper.dexkit.DexFinder
 import top.sacz.xphelper.ext.setFieldValue
 import top.sacz.xphelper.ext.toClass
@@ -26,7 +27,7 @@ object ShowMsgDetailCount : SwitchHook() {
             parameters = arrayOf(Int::class.java)
             paramCount = 1
         }.hookBefore {
-            val num = args[0] as Int
+            val num = args[0].cast<Int>()
             thisObject.apply {
                 setFieldValue("mNum", num)
                 setFieldValue("mText", num.toString())

@@ -15,6 +15,8 @@ import io.live.timas.api.ContactUtils
 import io.live.timas.api.TIMContactUpdateListener
 import io.live.timas.hook.base.SwitchHook
 import io.live.timas.hook.utils.XLog
+import io.live.timas.hook.utils.cast
+import io.live.timas.hook.utils.getDrawableIdByName
 import io.live.timas.util.LayoutHelper
 import top.sacz.xphelper.dexkit.DexFinder
 import top.sacz.xphelper.ext.toClass
@@ -34,8 +36,8 @@ object TitleBarEssence : SwitchHook() {
             declaredClass = "com.tencent.tim.aio.titlebar.TimRight1VB".toClass()
             returnType = "com.tencent.mobileqq.aio.widget.RedDotImageView".toClass()
         }.hookAfter {
-            val view = result as View
-            val rootView = view.parent as ViewGroup
+            val view = result.cast<View>()
+            val rootView = view.parent.cast<ViewGroup>()
 
             if (!rootView.children.map { it.id }.contains(Layout_Id)) {
                 val imageView = ImageView(view.context).apply {
@@ -48,11 +50,7 @@ object TitleBarEssence : SwitchHook() {
                         marginEnd = LayoutHelper.dp2px(view.context, 70f)
                     }
                     id = Layout_Id
-                    val iconResId = context.resources.getIdentifier(
-                        "qui_tui_brand_products",
-                        "drawable",
-                        context.packageName
-                    )
+                    val iconResId = getDrawableIdByName(ctx,"qui_tui_brand_products")
                     setImageResource(iconResId)
                     val night = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                     setColorFilter(if (night) Color.WHITE else Color.BLACK)

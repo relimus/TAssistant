@@ -4,6 +4,7 @@ import android.content.Context
 import io.live.timas.annotations.RegisterToUI
 import io.live.timas.annotations.UiCategory
 import io.live.timas.hook.base.SwitchHook
+import io.live.timas.hook.utils.cast
 import top.sacz.xphelper.dexkit.DexFinder
 import top.sacz.xphelper.ext.toClass
 
@@ -23,7 +24,7 @@ object ShowAccurateGaggedTime: SwitchHook() {
             returnType = String::class.java
         }.hookBefore {
 
-            val time = args[0] as Long
+            val time = args[0].cast<Long>()
             result = if (time <= 0) {
                 "0秒"
             } else {
