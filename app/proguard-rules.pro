@@ -24,10 +24,10 @@
 
 -obfuscationdictionary obf-dict.txt
 -classobfuscationdictionary obf-dict.txt
--repackageclasses "io.live.timas.random"
+-repackageclasses "re.limus.timas.random"
 
--keep class io.live.timas.hook.HookEntry { *; }
--keep,allowobfuscation class io.live.timas.ui.SettingActivity { *; }
+-keep class re.limus.timas.hook.HookEntry { *; }
+-keep,allowobfuscation class re.limus.timas.ui.SettingActivity { *; }
 
 # ProtoBuf 相关
 -keepclassmembers public class * extends com.google.protobuf.MessageLite {*;}

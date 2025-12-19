@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "io.live.timas"
+    namespace = "re.limus.timas"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "io.live.timas"
+        applicationId = "re.limus.timas"
         minSdk = 27
         targetSdk = 36
         versionCode = 1
