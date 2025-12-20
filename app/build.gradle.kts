@@ -16,8 +16,8 @@ android {
         applicationId = "re.limus.timas"
         minSdk = 27
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.1.3.$gitCommitHash"
+        versionCode = 1200
+        versionName = "v1.2.0.$gitCommitHash"
 
         ndk {
             abiFilters.add("arm64-v8a")
