@@ -22,9 +22,9 @@ class HookListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 // 对于 Android 13 (API 33) 及以上版本，使用新的 API
-                category = it.getSerializable(ARG_CATEGORY, UiCategory::class.java)
+                it.getSerializable(ARG_CATEGORY, UiCategory::class.java)
             } else {
                 @Suppress("DEPRECATION")
                 it.getSerializable(ARG_CATEGORY) as? UiCategory
