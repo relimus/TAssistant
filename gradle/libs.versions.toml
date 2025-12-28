@@ -18,7 +18,7 @@ xposed = "82"
 xpHelper = "2.9"
 
 # ByteBuddy
-byteBuddy = "1.18.2"
+byteBuddy = "1.18.3"
 
 # Json
 fastjson2 = "2.0.60"
