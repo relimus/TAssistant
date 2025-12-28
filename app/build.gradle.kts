@@ -76,6 +76,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
+    // okhttp3
+    implementation(libs.okhttp3)
+
     // Xposed
     compileOnly(libs.xposed.api)
     implementation(libs.xphelper)

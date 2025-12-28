@@ -25,7 +25,7 @@ class HookEntry : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     override fun handleLoadPackage(loadParam: LoadPackageParam) {
         if (loadParam.packageName != "com.tencent.tim") return
-
+        HookEnv.setHostAppPackageName(loadParam.packageName)
         loadPackageParam = loadParam
         val applicationCreateMethod = hookSteps.getApplicationCreateMethod(loadParam)
 
