@@ -2,4 +2,5 @@
 <resources>
     <item name="inject_setting" type="id" />
     <item name="item_msg_repeat" type="id" />
+    <item name="item_ptt_forward" type="id" />
 </resources>
