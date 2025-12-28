@@ -4,7 +4,7 @@
 agp = "9.1.0-alpha01"
 kotlin = "2.3.0"
 protobuf = "0.9.6"
-ksp = "2.3.2"
+ksp = "2.3.4"
 
 coreKtx = "1.17.0"
 appcompat = "1.7.1"
