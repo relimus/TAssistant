@@ -1,4 +1,39 @@
-val gitCommitHash = getGitHash()
+import java.io.ByteArrayOutputStream
+import javax.inject.Inject
+import org.gradle.api.provider.ValueSource
+import org.gradle.api.provider.ValueSourceParameters
+import org.gradle.process.ExecOperations
+import org.gradle.api.Project
+import java.io.File
+
+abstract class GitCommitCount : ValueSource<Int, ValueSourceParameters.None> {
+    @get:Inject abstract val execOperations: ExecOperations
+
+    override fun obtain(): Int {
+        val output = ByteArrayOutputStream()
+        execOperations.exec {
+            commandLine("git", "rev-list", "--count", "HEAD")
+            standardOutput = output
+        }
+        return output.toString().trim().toInt()
+    }
+}
+
+abstract class GitShortHash : ValueSource<String, ValueSourceParameters.None> {
+    @get:Inject abstract val execOperations: ExecOperations
+
+    override fun obtain(): String {
+        val output = ByteArrayOutputStream()
+        execOperations.exec {
+            commandLine("git", "rev-parse", "--short=7", "HEAD")
+            standardOutput = output
+        }
+        return output.toString().trim()
+    }
+}
+
+val gitCommitCount = providers.of(GitCommitCount::class.java) {}!!
+val gitShortHash = providers.of(GitShortHash::class.java) {}!!
 
 plugins {
     alias(libs.plugins.android.application)
@@ -16,8 +51,8 @@ android {
         applicationId = "re.limus.timas"
         minSdk = 27
         targetSdk = 36
-        versionCode = 1201
-        versionName = "v1.2.01.$gitCommitHash"
+        versionCode = providers.provider { getBuildVersionCode(rootProject) }.get()
+        versionName = "v1.2.01"
 
         ndk {
             abiFilters.add("arm64-v8a")
@@ -25,6 +60,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            versionNameSuffix = providers.provider {
+                getGitHeadRefsSuffix(rootProject, "debug")
+            }.get()
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -32,6 +72,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            versionNameSuffix = providers.provider {
+                getGitHeadRefsSuffix(rootProject, "release")
+            }.get()
         }
     }
     packaging {
@@ -60,14 +103,55 @@ android {
             "--package-id", "0xf2"
         )
     }
+
+    applicationVariants.all {
+        outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            output.outputFileName?.let { fileName ->
+                if (fileName.endsWith(".apk")) {
+                    val projectName = rootProject.name
+                    val currentVersionName = versionName
+                    output.outputFileName = "${projectName}-${currentVersionName}.apk"
+                }
+            }
+        }
+    }
 }
 
-fun getGitHash(): String {
-    return try {
-        val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD").start()
-        process.inputStream.bufferedReader().use { it.readText().trim() }
-    } catch (_: Exception) {
-        "unknown"
+fun getGitHeadRefsSuffix(project: Project, buildType: String): String {
+    val rootProject = project.rootProject
+    val projectDir = rootProject.projectDir
+    val headFile = File(projectDir, ".git" + File.separator + "HEAD")
+    return if (headFile.exists()) {
+        try {
+            val commitCount = gitCommitCount.get()
+            val hash = gitShortHash.get()
+            val prefix = if (buildType == "debug") ".d" else ".r"
+            "$prefix$commitCount.$hash"
+        } catch (e: Exception) {
+            println("Failed to get git info: ${e.message}")
+            ".standalone"
+        }
+    } else {
+        println("Git HEAD file not found")
+        ".standalone"
+    }
+}
+
+fun getBuildVersionCode(project: Project): Int {
+    val rootProject = project.rootProject
+    val projectDir = rootProject.projectDir
+    val headFile = File(projectDir, ".git" + File.separator + "HEAD")
+    return if (headFile.exists()) {
+        try {
+            gitCommitCount.get()
+        } catch (e: Exception) {
+            println("Failed to get git commit count: ${e.message}")
+            1
+        }
+    } else {
+        println("Git HEAD file not found")
+        1
     }
 }
 
