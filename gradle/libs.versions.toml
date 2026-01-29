@@ -27,7 +27,7 @@ byteBuddy = "1.18.4"
 fastjson2 = "2.0.60"
 
 # ProtoBuf
-protobuf-javalite = "4.33.4"
+protobuf-javalite = "4.33.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
