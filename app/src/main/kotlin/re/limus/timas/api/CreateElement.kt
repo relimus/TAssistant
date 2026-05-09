@@ -10,10 +10,11 @@ import de.robv.android.xposed.XposedHelpers
 import org.json.JSONArray
 import org.json.JSONObject
 import re.limus.timas.hook.utils.XLog
-import re.limus.timas.util.PathTool
 import re.limus.timas.util.DownloadManager
 import re.limus.timas.util.FileUtils
+import re.limus.timas.util.PathTool
 import top.sacz.xphelper.XpHelper
+import top.sacz.xphelper.ext.callMethod
 import top.sacz.xphelper.reflect.ClassUtils
 import top.sacz.xphelper.reflect.ConstructorUtils
 import top.sacz.xphelper.reflect.FieldUtils
@@ -157,18 +158,7 @@ object CreateElement {
                     63
             )
         )
-        return XposedHelpers.callMethod(
-            o,
-            "createPttElement",
-            arrayOf<Class<*>>(
-                String::class.java,
-                Int::class.java,
-                ArrayList::class.java
-            ),
-            url,
-            getDuration(url).toInt(),
-            myList
-        )
+        return o!!.callMethod("createPttElement", url, getDuration(url).toInt(), myList)
     }
 
     fun cachePttPath(url: String): String {
