@@ -25,7 +25,6 @@ byteBuddy = "1.18.8"
 
 # ProtoBuf
 protobuf-javalite = "4.34.1"
-kotlinx-serialization = "1.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,11 +50,9 @@ ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", v
 
 # ProtoBuf
 protobuf-java-lite = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf-javalite" }
-kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

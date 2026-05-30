@@ -1,0 +1,11 @@
+syntax = "proto3";
+package re.limus.trpc.msg;
+
+option java_package = "re.limus.trpc.msg";
+
+
+import "re/limus/trpc/msg/QQMessage.proto";
+
+message MsgPush {
+  QQMessage qqMessage = 1;
+}
