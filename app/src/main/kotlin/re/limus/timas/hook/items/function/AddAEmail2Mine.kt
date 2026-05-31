@@ -3,14 +3,13 @@ package re.limus.timas.hook.items.function
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
 import re.limus.timas.hook.utils.DexkitFind
 import re.limus.timas.hook.utils.XLog
 import re.limus.timas.hook.utils.cast
-import re.limus.timas.hook.utils.getDrawableIdByName
-import top.sacz.xphelper.XpHelper
 import top.sacz.xphelper.ext.toClass
 import top.sacz.xphelper.reflect.FieldUtils
 import top.sacz.xphelper.reflect.MethodUtils
@@ -24,7 +23,6 @@ object AddAEmail2Mine : SwitchHook() {
 
     override val category = UiCategory.FUNCTION
 
-    private val iconResId = getDrawableIdByName(XpHelper.context, "l4x")
     private const val EMAIL_ID = 13L
 
     override fun onHook(ctx: Context, loader: ClassLoader) {
@@ -105,7 +103,7 @@ object AddAEmail2Mine : SwitchHook() {
                 EMAIL_ID, // 卡片id
                 "邮箱", // 标题
                 "邮件收发", // 描述
-                iconResId, // 图标id
+                R.drawable.email, // 图标id
                 false, // 展示红点
                 true, // 默认展示
             )
