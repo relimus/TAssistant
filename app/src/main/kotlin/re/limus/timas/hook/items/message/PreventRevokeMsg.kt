@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
-import com.alibaba.fastjson2.TypeReference
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.api.TIMMessageViewListener
@@ -30,7 +29,9 @@ object PreventRevokeMsg : SwitchHook() {
     override val category = UiCategory.MESSAGE
 
     private const val viewId = 0x298382
+    private val config = ConfigUtils("RevokeMsgDataBase")
     private var retractMessageMap: MutableMap<String, MutableList<Int>> = HashMap()
+
     override fun onHook(ctx: Context, loader: ClassLoader) {
         readData()
 
@@ -50,10 +51,6 @@ object PreventRevokeMsg : SwitchHook() {
                 }
             }
         hookAIOMsgUpdate()
-    }
-
-    private fun getConfigUtils(): ConfigUtils {
-        return ConfigUtils("RevokeMsgDataBase")
     }
 
     private fun hookAIOMsgUpdate() {
@@ -144,18 +141,14 @@ object PreventRevokeMsg : SwitchHook() {
         seqList.add(msgSeq)
         //刷新map
         retractMessageMap[peerUid] = seqList
-        getConfigUtils().put("retractMessageMap", retractMessageMap)
+        config.put("retractMessageMap", retractMessageMap)
     }
 
     /**
      * 从本地读取撤回记录数据
      */
     private fun readData() {
-        val type = object : TypeReference<MutableMap<String, MutableList<Int>>>() {}
-        var localRetractMessageMap = getConfigUtils().getObject("retractMessageMap", type)
-        if (localRetractMessageMap == null) {
-            localRetractMessageMap = HashMap()
-        }
-        this.retractMessageMap = localRetractMessageMap
+        retractMessageMap = config.getObject<MutableMap<String, MutableList<Int>>>("retractMessageMap")
+            ?: HashMap()
     }
 }
