@@ -2,18 +2,20 @@ package re.limus.timas.hook.base
 
 import android.app.Application
 import android.content.Context
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
+import dalvik.system.BaseDexClassLoader
 import re.limus.timas.hook.utils.XLog
-import top.sacz.xphelper.ext.toClass
-import top.sacz.xphelper.reflect.MethodUtils
+import java.lang.reflect.Modifier
+import java.util.Collections
+import java.util.IdentityHashMap
 
 abstract class PluginHook : SwitchHook() {
 
     abstract val pluginID: String
 
     private var pluginClassLoader: ClassLoader? = null
-    private var hookPending = false
+    private var hostClassLoader: ClassLoader? = null
+    private var loaderHookPending = false
+    private var applicationHookPending = false
     @Volatile
     private var hookDone = false
 
@@ -23,99 +25,181 @@ abstract class PluginHook : SwitchHook() {
             return
         }
 
-        // 尝试直接加载，如果失败则延迟到 Application.onCreate 后
-        try {
-            initPluginProxy()
-            pluginClassLoader = getOrCreateClassLoader(ctx, pluginID)
-            if (pluginClassLoader != null) {
-                onPluginHook(ctx, pluginClassLoader!!)
-                return
-            }
-        } catch (t: Throwable) {
-            XLog.d("Direct load failed, will retry after Application.onCreate", t)
-        }
+        hostClassLoader = loader
+        hookDone = false
+        pluginClassLoader = null
+        loaderHookPending = false
+        applicationHookPending = false
 
-        // 延迟加载：Hook Application.onCreate
-        if (!hookPending) {
-            hookPending = true
+        try {
+            installLoadedPluginHook(ctx, loader)
+            hookPluginClassLoaderCreation(ctx, loader)
+        } catch (t: Throwable) {
+            XLog.d("Hook plugin class loader failed, will retry after Application.onCreate", t)
             hookApplicationOnCreate()
         }
     }
 
     private fun hookApplicationOnCreate() {
+        if (applicationHookPending) return
+        applicationHookPending = true
+
         try {
             val onCreateMethod = Application::class.java.getDeclaredMethod("onCreate")
-            XposedBridge.hookMethod(onCreateMethod, object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    if (hookDone) return
-                    val app = param.thisObject as Application
-                    if (app.packageName != "com.tencent.tim") return
+            onCreateMethod.hookAfter {
+                val app = thisObject as? Application ?: return@hookAfter
+                if (app.packageName != "com.tencent.tim") return@hookAfter
 
-                    try {
-                        initPluginProxy()
-                        pluginClassLoader = getOrCreateClassLoader(app, pluginID)
-                        if (pluginClassLoader != null) {
-                            hookDone = true
-                            onPluginHook(app, pluginClassLoader!!)
-                        }
-                    } catch (e: Throwable) {
-                        XLog.e("Failed to hook plugin after onCreate: $pluginID", e)
-                    }
-                }
-            })
-        } catch (e: Throwable) {
-            XLog.e("Failed to hook Application.onCreate", e)
-        }
-    }
-
-    private fun initPluginProxy() {
-        try {
-            val proxyClass = "com.tencent.mobileqq.pluginsdk.IPluginAdapterProxy".toClass()
-            val getProxyMethod = MethodUtils.create(proxyClass)
-                .methodName("getProxy")
-                .returnType(proxyClass)
-                .first()
-            getProxyMethod.isAccessible = true
-
-            if (getProxyMethod.invoke(null) == null) {
-                val setProxyMethod = MethodUtils.create(proxyClass)
-                    .methodName("setProxy")
-                    .params("com.tencent.mobileqq.pluginsdk.IPluginAdapter".toClass())
-                    .first()
-                setProxyMethod.isAccessible = true
-
-                val adapterImpl = listOf(
-                    "cooperation.plugin.c",
-                    "cooperation.plugin.PluginAdapterImpl",
-                    "bghq",
-                    "bfdk",
-                    "avgk",
-                    "avel"
-                ).firstNotNullOfOrNull { className ->
-                    runCatching { className.toClass() }.getOrNull()
-                }?.getDeclaredConstructor()?.apply { isAccessible = true }?.newInstance()
-
-                if (adapterImpl != null) {
-                    setProxyMethod.invoke(null, adapterImpl)
+                try {
+                    val loader = hostClassLoader ?: app.classLoader
+                    installLoadedPluginHook(app, loader)
+                    hookPluginClassLoaderCreation(app, loader)
+                } catch (e: Throwable) {
+                    XLog.e("Failed to hook plugin loader after onCreate: $pluginID", e)
                 }
             }
-        } catch (_: Throwable) {
-            // 忽略，可能已经初始化
+        } catch (e: Throwable) {
+            XLog.e("Failed to hook Application.onCreate for plugin loader: $pluginID", e)
         }
     }
 
-    private fun getOrCreateClassLoader(ctx: Context, pluginID: String): ClassLoader? {
-        return try {
-            val method = MethodUtils.create("com.tencent.mobileqq.pluginsdk.PluginStatic")
-                .methodName("getOrCreateClassLoader")
-                .params(Context::class.java, String::class.java)
-                .returnType(ClassLoader::class.java)
-                .first()
-            method.isAccessible = true
-            method.invoke(null, ctx, pluginID) as? ClassLoader
-        } catch (_: Throwable) {
-            null
+    private fun installLoadedPluginHook(ctx: Context, loader: ClassLoader) {
+        if (hookDone || !isLoad) return
+        val classLoader = findCachedPluginClassLoader(loader) ?: return
+        installPluginHook(ctx, classLoader)
+    }
+
+    private fun hookPluginClassLoaderCreation(ctx: Context, loader: ClassLoader) {
+        if (loaderHookPending) return
+        loaderHookPending = true
+
+        hookPluginStaticClassLoaderMethods(ctx, loader)
+        hookBaseDexClassLoaderConstructors(ctx)
+    }
+
+    private fun hookPluginStaticClassLoaderMethods(ctx: Context, loader: ClassLoader) {
+        val pluginStaticClass = runCatching {
+            Class.forName("com.tencent.mobileqq.pluginsdk.PluginStatic", false, loader)
+        }.getOrNull() ?: return
+
+        pluginStaticClass.declaredMethods
+            .filter { method ->
+                ClassLoader::class.java.isAssignableFrom(method.returnType) &&
+                    method.parameterTypes.any { it == String::class.java }
+            }
+            .forEach { method ->
+                method.hookAfter {
+                    if (hookDone || !isLoad || !args.containsPluginId()) return@hookAfter
+                    val classLoader = result as? ClassLoader ?: return@hookAfter
+                    installPluginHook(args.firstContextOr(ctx), classLoader)
+                }
+            }
+    }
+
+    private fun hookBaseDexClassLoaderConstructors(ctx: Context) {
+        BaseDexClassLoader::class.java.declaredConstructors.forEach { constructor ->
+            constructor.hookAfter {
+                if (hookDone || !isLoad || !args.containsPluginId()) return@hookAfter
+                val classLoader = thisObject as? ClassLoader ?: return@hookAfter
+                installPluginHook(ctx, classLoader)
+            }
         }
+    }
+
+    @Synchronized
+    private fun installPluginHook(ctx: Context, classLoader: ClassLoader) {
+        if (hookDone || !isLoad) return
+
+        try {
+            pluginClassLoader = classLoader
+            onPluginHook(ctx, classLoader)
+            hookDone = true
+        } catch (t: Throwable) {
+            pluginClassLoader = null
+            XLog.e("Failed to hook plugin: $pluginID", t)
+        }
+    }
+
+    private fun findCachedPluginClassLoader(loader: ClassLoader): ClassLoader? {
+        val pluginStaticClass = runCatching {
+            Class.forName("com.tencent.mobileqq.pluginsdk.PluginStatic", false, loader)
+        }.getOrNull() ?: return null
+
+        val seen = Collections.newSetFromMap(IdentityHashMap<Any, Boolean>())
+        pluginStaticClass.declaredFields.forEach { field ->
+            if (!Modifier.isStatic(field.modifiers)) return@forEach
+            val value = runCatching {
+                field.isAccessible = true
+                field.get(null)
+            }.getOrNull()
+            findClassLoaderInValue(value, seen)?.let { return it }
+        }
+        return null
+    }
+
+    private fun findClassLoaderInValue(
+        value: Any?,
+        seen: MutableSet<Any>,
+        ownerMatchesPlugin: Boolean = false
+    ): ClassLoader? {
+        if (value == null || !seen.add(value)) return null
+
+        if (value is ClassLoader) {
+            return if (ownerMatchesPlugin || value.toString().containsPluginId()) value else null
+        }
+
+        if (value is Map<*, *>) {
+            value.entries.forEach { entry ->
+                val entryMatches = ownerMatchesPlugin ||
+                    entry.key?.toString()?.containsPluginId() == true ||
+                    entry.value?.toString()?.containsPluginId() == true
+                findClassLoaderInValue(entry.value, seen, entryMatches)?.let { return it }
+            }
+            return null
+        }
+
+        if (value is Iterable<*>) {
+            value.forEach { item ->
+                findClassLoaderInValue(item, seen, ownerMatchesPlugin)?.let { return it }
+            }
+            return null
+        }
+
+        val className = value.javaClass.name
+        if (className.startsWith("java.") || className.startsWith("android.")) return null
+
+        var currentClass: Class<*>? = value.javaClass
+        while (currentClass != null && currentClass != Any::class.java) {
+            currentClass.declaredFields.forEach { field ->
+                if (Modifier.isStatic(field.modifiers)) return@forEach
+                val fieldValue = runCatching {
+                    field.isAccessible = true
+                    field.get(value)
+                }.getOrNull()
+                val fieldMatches = ownerMatchesPlugin ||
+                    field.name.contains("loader", ignoreCase = true) ||
+                    fieldValue?.toString()?.containsPluginId() == true
+                findClassLoaderInValue(fieldValue, seen, fieldMatches)?.let { return it }
+            }
+            currentClass = currentClass.superclass
+        }
+        return null
+    }
+
+    private fun Array<Any?>.containsPluginId(): Boolean {
+        return any { (it as? String)?.containsPluginId() == true }
+    }
+
+    private fun Array<Any?>.firstContextOr(defaultContext: Context): Context {
+        return filterIsInstance<Context>().firstOrNull() ?: defaultContext
+    }
+
+    private fun String.containsPluginId(): Boolean {
+        val idWithoutSuffix = pluginID.removeSuffix(".apk")
+        return equals(pluginID, ignoreCase = true) ||
+            contains(pluginID, ignoreCase = true) ||
+            equals(idWithoutSuffix, ignoreCase = true) ||
+            contains(idWithoutSuffix, ignoreCase = true)
     }
 
     abstract fun onPluginHook(ctx: Context, pluginLoader: ClassLoader)
