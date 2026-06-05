@@ -6,7 +6,6 @@ import android.os.Environment
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import de.robv.android.xposed.XposedHelpers
 import org.json.JSONArray
 import org.json.JSONObject
 import re.limus.timas.hook.utils.XLog
@@ -26,10 +25,8 @@ object CreateElement {
     fun createTextElement(text: String?): Any {
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
+        return o!!.callMethod(
             "createTextElement",
-            arrayOf<Class<*>>(String::class.java),
             text
         )
     }
@@ -38,14 +35,11 @@ object CreateElement {
         val path = cachePicPath(url)
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
+        return o!!.callMethod(
             "createPicElement",
-            arrayOf<Class<*>>(
-                String::class.java,
-                Boolean::class.java,
-                Int::class.java
-            ),
+            String::class.java,
+            Boolean::class.java,
+            Int::class.java,
             path,
             true,
             1
@@ -56,14 +50,11 @@ object CreateElement {
         val path = cachePicPath(url)
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
+        return o!!.callMethod(
             "createPicElement",
-            arrayOf<Class<*>>(
-                String::class.java,
-                Boolean::class.java,
-                Int::class.java
-            ),
+            String::class.java,
+            Boolean::class.java,
+            Int::class.java,
             path,
             true,
             0
@@ -73,14 +64,7 @@ object CreateElement {
     fun createAtTextElement(text: String?, peerUid: String?, atType: Int): Any { //0不艾特1全体2个人
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
-            "createAtTextElement",
-            arrayOf<Class<*>>(String::class.java, String::class.java, Int::class.java),
-            text,
-            peerUid,
-            atType
-        )
+        return o!!.callMethod("createAtTextElement", text, peerUid, atType)
     }
 
     /**
@@ -101,23 +85,13 @@ object CreateElement {
     fun createReplyElement(msgId: Long): Any {
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
-            "createReplyElement",
-            arrayOf<Class<*>>(Long::class.javaPrimitiveType!!),
-            msgId
-        )
+        return o!!.callMethod("createReplyElement", msgId)
     }
 
     fun createFileElement(path: String?): Any {
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
-            "createFileElement",
-            arrayOf<Class<*>>(String::class.java),
-            path
-        )
+        return o!!.callMethod("createFileElement", path)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -185,10 +159,8 @@ object CreateElement {
     fun createVideoElement(path: String?): Any {
         val o: Any? =
             TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-        return XposedHelpers.callMethod(
-            o,
+        return o!!.callMethod(
             "createVideoElement",
-            arrayOf<Class<*>>(String::class.java),
             path
         )
     }
@@ -233,18 +205,15 @@ object CreateElement {
                 .fieldName("jsonGrayTipElement")
                 .setLast(grayTipElement, jsonGrayElement)
 
-            val msgElement =
-                ConstructorUtils.newInstance(ClassUtils.findClass("com.tencent.qqnt.kernel.nativeinterface.MsgElement"))
-            XposedHelpers.callMethod(
-                msgElement,
+            val msgElement: Any =
+                ConstructorUtils.newInstance(ClassUtils.findClass("com.tencent.qqnt.kernel.nativeinterface.MsgElement"))!!
+
+            msgElement.callMethod<Any?>(
                 "setElementType",
-                arrayOf<Class<*>>(Int::class.javaPrimitiveType!!),
                 8
             )
-            XposedHelpers.callMethod(
-                msgElement,
+            msgElement.callMethod<Any?>(
                 "setGrayTipElement",
-                arrayOf<Class<*>?>(ClassUtils.findClass("com.tencent.qqnt.kernel.nativeinterface.GrayTipElement")),
                 grayTipElement
             )
             return msgElement
@@ -258,22 +227,19 @@ object CreateElement {
         try {
             val cardData = ClassUtils.findClass("com.tencent.qqnt.msg.a.b")
             val cardDataObject: Any = cardData.newInstance()
-            val o1 = XposedHelpers.callMethod(
-                cardDataObject,
+            val o1 = cardDataObject.callMethod<Boolean>(
                 "o",
                 arrayOf<Class<*>>(String::class.java),
                 card
-            ) as Boolean
+            )
             if (!o1) {
                 Toast.makeText(XpHelper.context, "卡片格式有问题: $card", Toast.LENGTH_SHORT).show()
                 return null
             }
             val o: Any? =
                 TIMEnvTool.getQRouteApi(ClassUtils.findClass("com.tencent.qqnt.msg.api.IMsgUtilApi"))
-            return XposedHelpers.callMethod(
-                o,
+            return o!!.callMethod(
                 "createArkElement",
-                arrayOf<Class<*>?>(cardData),
                 cardDataObject
             )
         } catch (e: IllegalAccessException) {
