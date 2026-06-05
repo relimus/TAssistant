@@ -24,33 +24,47 @@ object TroopFilePermanent : PluginHook() {
     override val pluginID = "troop_plugin.apk"
 
     private const val KEY_FIELDS = "timas-fields"
+    private const val KEY_INFO = "timas-info"
     private const val KEY_TAG = "timas-tag"
 
     override fun onPluginHook(ctx: Context, pluginLoader: ClassLoader) {
-        val adapterClass = pluginLoader.loadClass(
-                    "com.tencent.mobileqq.troop.data.TroopFileShowAdapter\$1"
-                ).getDeclaredField("this\$0").type
+        val adapterClass = runCatching {
+            pluginLoader.loadClass("com.tencent.mobileqq.troop.data.TroopFileShowAdapter\$1")
+                .getDeclaredField("this\$0").type
+        }.getOrElse {
+            XLog.e("TroopFilePermanent: TroopFileShowAdapter not found", it)
+            return
+        }
 
         val infoClass = adapterClass.declaredFields
             .find { it.type == List::class.java }
             ?.genericType
-            ?.let { (it as? ParameterizedType)?.actualTypeArguments?.get(0) as? Class<*> }
-            ?: return
+            ?.let { (it.cast<ParameterizedType?>())?.actualTypeArguments?.get(0).cast<Class<*>>() }
+            ?: run {
+                XLog.e("TroopFilePermanent: info class not found")
+                return
+            }
 
         val itemClass = adapterClass.declaredFields
             .find { it.type == Map::class.java }
             ?.genericType
-            ?.let { (it as? ParameterizedType)?.actualTypeArguments?.get(1) as? Class<*> }
-            ?: return
+            ?.let { (it.cast<ParameterizedType?>())?.actualTypeArguments?.get(1).cast<Class<*>>() }
+            ?: run {
+                XLog.e("TroopFilePermanent: item class not found")
+                return
+            }
 
         val targetMethod = itemClass.declaredMethods.find {
             it.returnType == Boolean::class.java &&
                 it.parameterTypes.contentEquals(arrayOf(View::class.java))
-        } ?: return
+        } ?: run {
+            XLog.e("TroopFilePermanent: target method not found")
+            return
+        }
 
         XposedBridge.hookMethod(targetMethod, object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
-                val view = param.args[0] as View
+                val view = param.args[0].cast<View>()
                 param.setObjectExtra(KEY_TAG, view.tag)
 
                 val info = getFirstByType(param.thisObject, infoClass) ?: return
@@ -59,19 +73,21 @@ object TroopFilePermanent : PluginHook() {
                     field.isAccessible = true
                     field.type == Int::class.javaPrimitiveType && field.getInt(info) == 102
                 }
+                if (fields.isEmpty()) return
+
+                param.setObjectExtra(KEY_INFO, info)
                 param.setObjectExtra(KEY_FIELDS, fields)
                 fields.forEach { it.setInt(info, 114514) }
                 view.tag = info
             }
 
             override fun afterHookedMethod(param: MethodHookParam) {
-                val fields = param.getObjectExtra(KEY_FIELDS).cast<List<Field>>()
+                val fields = param.getObjectExtra(KEY_FIELDS).cast<List<Field>?>() ?: return
+                val info = param.getObjectExtra(KEY_INFO) ?: return
                 val savedTag = param.getObjectExtra(KEY_TAG)
 
-                val view = param.args[0] as View
-                val info = view.tag ?: return
                 fields.forEach { it.setInt(info, 102) }
-                view.tag = savedTag
+                (param.args[0].cast<View>()).tag = savedTag
             }
         })
     }
