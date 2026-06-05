@@ -55,7 +55,7 @@ val releaseVersionNameSuffix = providers.provider {
 
 extensions.configure<ApplicationExtension> {
     namespace = "re.limus.timas"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "re.limus.timas"
