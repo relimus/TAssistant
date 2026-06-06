@@ -2,24 +2,18 @@ package re.limus.timas.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import com.google.android.material.tabs.TabLayoutMediator
 import re.limus.timas.R
 import re.limus.timas.databinding.ActivitySettingBinding
 import re.limus.timas.hook.manager.HookManager
 import re.limus.timas.ui.adapter.SettingsPagerAdapter
-import top.sacz.xphelper.activity.BaseActivity
+import re.limus.timas.ui.base.InjectedActivity
 
-class SettingActivity : BaseActivity() {
-
-    private lateinit var binding: ActivitySettingBinding
+class SettingActivity : InjectedActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_TAssistant)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivitySettingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         setupToolbar()
         setupViewPagerAndTabs()

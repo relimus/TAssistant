@@ -2,20 +2,15 @@ package re.limus.timas.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.databinding.FragmentHookListBinding
 import re.limus.timas.hook.manager.HookManager
 import re.limus.timas.ui.adapter.HookAdapter
+import re.limus.timas.ui.base.BaseFragment
 
-class HookListFragment : Fragment() {
-
-    private var _binding: FragmentHookListBinding? = null
-    private val binding get() = _binding!!
+class HookListFragment : BaseFragment<FragmentHookListBinding>(FragmentHookListBinding::inflate) {
 
     private val category: UiCategory? by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -24,14 +19,6 @@ class HookListFragment : Fragment() {
             @Suppress("DEPRECATION")
             arguments?.getSerializable(ARG_CATEGORY) as? UiCategory
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHookListBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,11 +36,6 @@ class HookListFragment : Fragment() {
             setHasFixedSize(true)
             adapter = HookAdapter(filteredHooks)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {
