@@ -12,11 +12,20 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>(FragmentAboutBinding::i
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickAuthor()
+        clickDonate()
     }
 
     private fun clickAuthor() {
         binding.githubButton.setOnClickListener {
             val url = "https://github.com/relimus".toUri()
+            val intent = Intent(Intent.ACTION_VIEW, url)
+            startActivity(intent)
+        }
+    }
+
+    private fun clickDonate() {
+        binding.donateButton.setOnClickListener {
+            val url = "https://afdian.com/a/relimus".toUri()
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
         }

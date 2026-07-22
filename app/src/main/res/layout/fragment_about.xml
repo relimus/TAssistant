@@ -56,6 +56,25 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/donate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/donate"
+            android:textSize="16sp"
+            app:icon="@drawable/ic_donate"
+            app:iconPadding="4dp"
+            app:iconGravity="textStart"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/github_button"
+            style="@style/Widget.Material3Expressive.Button.TonalButton"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/github_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
