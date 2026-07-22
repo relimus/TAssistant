@@ -105,6 +105,10 @@ class HookAdapter(
             switchView.setOnCheckedChangeListener { _, isChecked ->
                 HookManager.setEnabled(hookItem.hook, isChecked)
             }
+
+            itemView.setOnClickListener {
+                hookItem.hook.onclick(it.context)
+            }
         }
     }
 

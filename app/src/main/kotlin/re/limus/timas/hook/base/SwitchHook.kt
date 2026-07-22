@@ -1,5 +1,6 @@
 package re.limus.timas.hook.base
 
+import android.content.Context
 import re.limus.timas.annotations.UiCategory
 
 abstract class SwitchHook : XBridge() {
@@ -7,4 +8,5 @@ abstract class SwitchHook : XBridge() {
     open val description: CharSequence? = null
     open val category: UiCategory = UiCategory.OTHER
     open val needRestart: Boolean = false
+    open fun onclick(context: Context) {}
 }
