@@ -15,9 +15,9 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>(FragmentAboutBinding::i
     }
 
     private fun clickAuthor() {
-        binding.button.setOnClickListener {
-            val uri = "https://github.com/relimus".toUri()
-            val intent = Intent(Intent.ACTION_VIEW, uri)
+        binding.githubButton.setOnClickListener {
+            val url = "https://github.com/relimus".toUri()
+            val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
         }
     }

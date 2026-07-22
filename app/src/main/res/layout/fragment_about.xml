@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:text="@string/author_name"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="2dp"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/head"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,26 +50,26 @@
             android:textSize="16sp"
             android:alpha="0.64"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="2dp"
             app:layout_constraintTop_toTopOf="@id/ta_author"
             app:layout_constraintStart_toEndOf="@id/head"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:id="@+id/github_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:insetLeft="0dp"
             android:insetRight="0dp"
             android:layout_marginEnd="16dp"
-            app:icon="@drawable/ic_into"
-            app:iconPadding="0dp"
+            app:icon="@drawable/ic_github"
             app:iconGravity="textStart"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.Material3Expressive.Button.TonalButton"/>
+            style="@style/Widget.Material3Expressive.Button.IconButton.Tonal"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
