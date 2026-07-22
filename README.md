@@ -59,6 +59,7 @@ TAssistant 是一个主要目的以促进 TIM体验 为主的 Xposed 模块
 - [XPHelper](https://github.com/suzhelan/XPHelper)
 - [QAuxiliary](https://github.com/cinit/QAuxiliary)
 - [TCQT](https://github.com/callng/TCQT)
+- [QFun](https://github.com/oneQAQone/QFun)
 
 ## 赞助
 - `爱发电`:  https://afdian.com/a/relimus
