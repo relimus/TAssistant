@@ -3,4 +3,7 @@
     <string name="about">关于</string>
     <string name="author">开发团队</string>
     <string name="xposed_description">Make TIM Great Again!</string>
+    <string name="custom_directory_title">重定向下载目录</string>
+    <string name="custom_directory_path_hint">下载目录绝对路径</string>
+    <string name="custom_directory_path_error">请输入有效的绝对路径</string>
 </resources>
