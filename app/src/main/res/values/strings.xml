@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name" translatable="false">TAssistant</string>
+    <string name="tab_message">Messages</string>
+    <string name="tab_function">Function</string>
+    <string name="tab_style">Style</string>
+    <string name="tab_file">File</string>
+    <string name="tab_qzone">QZone</string>
+    <string name="tab_other">Other</string>
     <string name="about">About</string>
     <string name="developer">Developer</string>
     <string name="author">Author</string>

@@ -8,6 +8,7 @@ import re.limus.timas.databinding.ActivitySettingBinding
 import re.limus.timas.hook.manager.HookManager
 import re.limus.timas.ui.adapter.SettingsPagerAdapter
 import re.limus.timas.ui.base.InjectedActivity
+import re.limus.timas.ui.utils.getLabel
 
 class SettingActivity : InjectedActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
 
@@ -40,7 +41,7 @@ class SettingActivity : InjectedActivity<ActivitySettingBinding>(ActivitySetting
 
         TabLayoutMediator(binding.tabLayoutCategory, binding.viewPager) { tab, position ->
             tab.text = if (position < usedCategories.size) {
-                usedCategories[position].displayName
+                usedCategories[position].getLabel(this)
             } else {
                 getString(R.string.about)
             }

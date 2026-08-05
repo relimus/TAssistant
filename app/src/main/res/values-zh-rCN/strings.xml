@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="tab_message">消息</string>
+    <string name="tab_function">功能</string>
+    <string name="tab_style">界面</string>
+    <string name="tab_file">文件</string>
+    <string name="tab_qzone">空间</string>
+    <string name="tab_other">其他</string>
     <string name="about">关于</string>
     <string name="developer">开发团队</string>
     <string name="author">作者</string>
