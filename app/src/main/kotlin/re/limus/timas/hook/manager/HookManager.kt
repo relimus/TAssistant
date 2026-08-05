@@ -1,9 +1,13 @@
 package re.limus.timas.hook.manager
 
+import android.content.Context
 import re.limus.timas.hook.base.SwitchHook
 import re.limus.timas.hook.generated.HookRegistry
 import re.limus.timas.ui.model.HookItem
+import re.limus.timas.ui.utils.HookLocalization
+import top.sacz.xphelper.XpHelper
 import top.sacz.xphelper.util.ConfigUtils
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Hook 管理器
@@ -15,8 +19,7 @@ object HookManager {
     private val configUtils = ConfigUtils(PREF_NAME)
 
     // 性能优化：缓存 Hook 列表，避免重复加载
-    @Volatile
-    private var cachedHooks: List<HookItem>? = null
+    private val cachedHooks = ConcurrentHashMap<String, List<HookItem>>()
 
     // 性能优化：缓存启用状态，减少存储访问
     private val enabledStateCache = mutableMapOf<String, Boolean>()
@@ -25,17 +28,20 @@ object HookManager {
      * 获取所有 Hook 实例
      * 直接使用 KSP 生成的实例列表，完全无需反射
      */
-    fun getAllHooks(): List<HookItem> {
-        return cachedHooks ?: synchronized(this) {
-            cachedHooks ?: run {
+    fun getAllHooks(): List<HookItem> = getAllHooks(XpHelper.context)
+
+    fun getAllHooks(context: Context): List<HookItem> {
+        val localeKey = context.resources.configuration.locales.toLanguageTags()
+        return cachedHooks[localeKey] ?: synchronized(this) {
+            cachedHooks[localeKey] ?: run {
                 val hooks = HookRegistry.hookInstances.mapNotNull { hookInstance ->
                     try {
-                        loadHookItem(hookInstance)
+                        loadHookItem(context, hookInstance)
                     } catch (_: Exception) {
                         null
                     }
                 }
-                cachedHooks = hooks
+                cachedHooks[localeKey] = hooks
                 hooks
             }
         }
@@ -45,14 +51,14 @@ object HookManager {
      * 加载单个 Hook 项
      * 直接使用传入的 Hook 实例，无需反射
      */
-    private fun loadHookItem(hookInstance: SwitchHook): HookItem {
+    private fun loadHookItem(context: Context, hookInstance: SwitchHook): HookItem {
         val key = getStorageKey(hookInstance)
         val isEnabled = getEnabledState(key)
 
         return HookItem(
             hook = hookInstance,
-            name = hookInstance.name,
-            description = hookInstance.description,
+            name = HookLocalization.name(context, hookInstance),
+            description = HookLocalization.description(context, hookInstance),
             category = hookInstance.category,
             needRestart = hookInstance.needRestart,
             isEnabled = isEnabled
@@ -133,6 +139,6 @@ object HookManager {
      * 在状态变更时调用，确保下次获取时使用最新状态
      */
     private fun invalidateHooksCache() {
-        cachedHooks = null
+        cachedHooks.clear()
     }
 }
