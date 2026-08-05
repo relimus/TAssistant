@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_message">메시지</string>
+    <string name="tab_function">기능</string>
+    <string name="tab_style">화면</string>
+    <string name="tab_file">파일</string>
+    <string name="tab_qzone">Qzone</string>
+    <string name="tab_other">기타</string>
+    <string name="about">정보</string>
+    <string name="developer">개발팀</string>
+    <string name="author">제작자</string>
+    <string name="donate">기부</string>
+    <string name="custom_directory_title">다운로드 폴더 리디렉션</string>
+    <string name="custom_directory_path_hint">다운로드 폴더의 절대 경로</string>
+    <string name="custom_directory_path_error">올바른 절대 경로를 입력하세요</string>
+</resources>

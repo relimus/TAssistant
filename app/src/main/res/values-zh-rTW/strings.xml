@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_message">訊息</string>
+    <string name="tab_function">功能</string>
+    <string name="tab_style">介面</string>
+    <string name="tab_file">檔案</string>
+    <string name="tab_qzone">空間</string>
+    <string name="tab_other">其他</string>
+    <string name="about">關於</string>
+    <string name="developer">開發團隊</string>
+    <string name="author">作者</string>
+    <string name="donate">捐贈</string>
+    <string name="custom_directory_title">重新導向下載資料夾</string>
+    <string name="custom_directory_path_hint">下載資料夾的絕對路徑</string>
+    <string name="custom_directory_path_error">請輸入有效的絕對路徑</string>
+</resources>

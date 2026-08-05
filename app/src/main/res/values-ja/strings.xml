@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_message">メッセージ</string>
+    <string name="tab_function">機能</string>
+    <string name="tab_style">外観</string>
+    <string name="tab_file">ファイル</string>
+    <string name="tab_qzone">Qzone</string>
+    <string name="tab_other">その他</string>
+    <string name="about">このアプリについて</string>
+    <string name="developer">開発チーム</string>
+    <string name="author">作者</string>
+    <string name="donate">寄付</string>
+    <string name="custom_directory_title">ダウンロード先を変更</string>
+    <string name="custom_directory_path_hint">ダウンロード先の絶対パス</string>
+    <string name="custom_directory_path_error">有効な絶対パスを入力してください</string>
+</resources>
