@@ -1,5 +1,6 @@
 package re.limus.timas.ui.model
 
+import androidx.annotation.StringRes
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
 
@@ -8,13 +9,11 @@ import re.limus.timas.hook.base.SwitchHook
  */
 data class HookItem(
     val hook: SwitchHook,
-    val name: String,
-    val description: CharSequence?,
+    @StringRes val nameResId: Int,
+    @StringRes val descriptionResId: Int?,
     val category: UiCategory,
     val needRestart: Boolean,
     var isEnabled: Boolean = false
 )
-
-
 
 

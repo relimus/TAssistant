@@ -1,16 +1,16 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
 
 @RegisterToUI
-object SortAtList : SwitchHook() {
-
-    override val name = "@列表重新排序"
-
-    override val description = "优先排序群主以及管理"
+object SortAtList : SwitchHook(
+    R.string.hook_sort_at_list_name,
+    R.string.hook_sort_at_list_description
+) {
 
     override val category = UiCategory.MESSAGE
 

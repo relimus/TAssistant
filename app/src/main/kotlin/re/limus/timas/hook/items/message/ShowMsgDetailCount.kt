@@ -1,6 +1,7 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
@@ -10,11 +11,10 @@ import top.sacz.xphelper.ext.setFieldValue
 import top.sacz.xphelper.ext.toClass
 
 @RegisterToUI
-object ShowMsgDetailCount : SwitchHook() {
-
-    override val name = "显示消息具体数量"
-
-    override val description = "消息数量不再显示99+"
+object ShowMsgDetailCount : SwitchHook(
+    R.string.hook_show_msg_detail_count_name,
+    R.string.hook_show_msg_detail_count_description
+) {
 
     override val category = UiCategory.MESSAGE
 

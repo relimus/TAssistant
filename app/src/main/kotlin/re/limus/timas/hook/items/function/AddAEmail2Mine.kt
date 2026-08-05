@@ -15,11 +15,10 @@ import top.sacz.xphelper.reflect.FieldUtils
 import top.sacz.xphelper.reflect.MethodUtils
 
 @RegisterToUI
-object AddAEmail2Mine : SwitchHook() {
-
-    override val name = "添加 邮箱 快捷入口"
-
-    override val description = "在\"我的\"页面添加基于网页的 邮箱 入口"
+object AddAEmail2Mine : SwitchHook(
+    R.string.hook_add_email_to_mine_name,
+    R.string.hook_add_email_to_mine_description
+) {
 
     override val category = UiCategory.FUNCTION
 

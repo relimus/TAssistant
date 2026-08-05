@@ -15,11 +15,10 @@ import top.sacz.xphelper.reflect.FieldUtils
 import top.sacz.xphelper.reflect.MethodUtils
 
 @RegisterToUI
-object AddChannel2Mine : SwitchHook() {
-
-    override val name = "添加 频道 快捷入口"
-
-    override val description = "在\"我的\"页面添加基于网页的 频道 入口"
+object AddChannel2Mine : SwitchHook(
+    R.string.hook_add_channel_to_mine_name,
+    R.string.hook_add_channel_to_mine_description
+) {
 
     override val category = UiCategory.FUNCTION
 

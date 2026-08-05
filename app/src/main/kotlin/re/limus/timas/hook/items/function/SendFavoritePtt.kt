@@ -12,6 +12,7 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.api.TIMPttTool
@@ -23,10 +24,10 @@ import top.sacz.xphelper.reflect.FieldUtils
 import java.lang.reflect.Modifier
 
 @RegisterToUI
-object SendFavoritePtt : PluginHook() {
-
-    override val name = "允许发送收藏语音"
-    override val description = "收藏中的语音可直接发送给聊天中"
+object SendFavoritePtt : PluginHook(
+    R.string.hook_send_favorite_ptt_name,
+    R.string.hook_send_favorite_ptt_description
+) {
     override val category = UiCategory.FUNCTION
     override val pluginID = "qqfav.apk"
 

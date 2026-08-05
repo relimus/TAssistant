@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
+import re.limus.timas.R
 import re.limus.timas.activity.SAFAgentActivity
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
@@ -14,11 +15,10 @@ import re.limus.timas.hook.base.SwitchHook
 import re.limus.timas.hook.utils.XLog
 
 @RegisterToUI
-object SAFSelector : SwitchHook() {
-
-    override val name = "使用系统文件选择器"
-
-    override val description = "使用 SAF 替代 TIM 内置文件管理器 发送文件"
+object SAFSelector : SwitchHook(
+    R.string.hook_saf_selector_name,
+    R.string.hook_saf_selector_description
+) {
 
     override val category = UiCategory.FILE
 

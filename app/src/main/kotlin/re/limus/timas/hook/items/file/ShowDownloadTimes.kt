@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.PluginHook
@@ -17,11 +18,10 @@ import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
 
 @RegisterToUI
-object ShowDownloadTimes : PluginHook() {
-
-    override val name = "显示文件下载次数"
-
-    override val description = "群文件显示具体下载次数"
+object ShowDownloadTimes : PluginHook(
+    R.string.hook_show_download_times_name,
+    R.string.hook_show_download_times_description
+) {
 
     override val category = UiCategory.FILE
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.PluginHook
@@ -13,11 +14,10 @@ import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
 @RegisterToUI
-object TroopFilePermanent : PluginHook() {
-
-    override val name = "群文件转存永久"
-
-    override val description = "群文件长按菜单可转存为永久文件"
+object TroopFilePermanent : PluginHook(
+    R.string.hook_troop_file_permanent_name,
+    R.string.hook_troop_file_permanent_description
+) {
 
     override val category = UiCategory.FILE
 

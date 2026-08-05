@@ -2,13 +2,17 @@ package re.limus.timas.hook.base
 
 import android.app.Application
 import android.content.Context
+import androidx.annotation.StringRes
 import dalvik.system.BaseDexClassLoader
 import re.limus.timas.hook.utils.XLog
 import java.lang.reflect.Modifier
 import java.util.Collections
 import java.util.IdentityHashMap
 
-abstract class PluginHook : SwitchHook() {
+abstract class PluginHook(
+    @StringRes nameResId: Int,
+    @StringRes descriptionResId: Int? = null
+) : SwitchHook(nameResId, descriptionResId) {
 
     abstract val pluginID: String
 

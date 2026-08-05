@@ -3,6 +3,7 @@ package re.limus.timas.hook.items.file
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
@@ -12,11 +13,10 @@ import top.sacz.xphelper.reflect.ClassUtils
 import top.sacz.xphelper.reflect.FieldUtils
 
 @RegisterToUI
-object RenameApk : SwitchHook() {
-
-    override val name = "格式化上传应用名"
-
-    override val description = "将QQ修改的 base.apk.1 改为 应用名_版本号.Apk 格式"
+object RenameApk : SwitchHook(
+    R.string.hook_rename_apk_name,
+    R.string.hook_rename_apk_description
+) {
 
     override val category = UiCategory.FILE
 

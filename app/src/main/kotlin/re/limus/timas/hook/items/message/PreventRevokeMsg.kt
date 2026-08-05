@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.api.TIMMessageViewListener
@@ -20,11 +21,10 @@ import top.sacz.xphelper.util.ConfigUtils
 import kotlin.collections.get
 
 @RegisterToUI
-object PreventRevokeMsg : SwitchHook() {
-
-    override val name = "防撤回"
-
-    override val description = "防止他人消息被撤回, 并带有灰字提示"
+object PreventRevokeMsg : SwitchHook(
+    R.string.hook_prevent_revoke_msg_name,
+    R.string.hook_prevent_revoke_msg_description
+) {
 
     override val category = UiCategory.MESSAGE
 

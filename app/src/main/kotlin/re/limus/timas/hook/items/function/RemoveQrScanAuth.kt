@@ -1,15 +1,14 @@
 package re.limus.timas.hook.items.function
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
 import top.sacz.xphelper.dexkit.DexFinder
 
 @RegisterToUI
-object RemoveQrScanAuth : SwitchHook() {
-
-    override val name = "移除相册扫码检验"
+object RemoveQrScanAuth : SwitchHook(R.string.hook_remove_qr_scan_auth_name) {
 
     override val category = UiCategory.FUNCTION
 

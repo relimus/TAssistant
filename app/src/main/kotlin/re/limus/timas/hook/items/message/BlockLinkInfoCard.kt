@@ -1,6 +1,7 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
@@ -9,9 +10,7 @@ import top.sacz.xphelper.ext.toClass
 
 // dartcv
 @RegisterToUI
-object BlockLinkInfoCard: SwitchHook() {
-    
-    override val name = "屏蔽链接信息卡片"
+object BlockLinkInfoCard: SwitchHook(R.string.hook_block_link_info_card_name) {
     
     override val category = UiCategory.MESSAGE
 

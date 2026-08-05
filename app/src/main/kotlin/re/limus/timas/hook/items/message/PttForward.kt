@@ -26,11 +26,10 @@ import top.sacz.xphelper.util.ActivityTools
 import java.io.File
 
 @RegisterToUI
-object PttForward : SwitchHook(), OnMenuBuilder {
-
-    override val name = "语音转发"
-
-    override val description = "长按语音消息显示转发按钮，可以转发给 其他好友 或 群"
+object PttForward : SwitchHook(
+    R.string.hook_ptt_forward_name,
+    R.string.hook_ptt_forward_description
+), OnMenuBuilder {
 
     override val category = UiCategory.MESSAGE
 

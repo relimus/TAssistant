@@ -1,6 +1,7 @@
 package re.limus.timas.hook.items.function
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
@@ -9,11 +10,10 @@ import top.sacz.xphelper.ext.toClass
 import top.sacz.xphelper.reflect.FieldUtils
 
 @RegisterToUI
-object RemoveForwardNumbersLimit : SwitchHook() {
-
-    override val name = "去除转发消息人数限制"
-
-    override val description = "去除 转发消息 上限9人"
+object RemoveForwardNumbersLimit : SwitchHook(
+    R.string.hook_remove_forward_numbers_limit_name,
+    R.string.hook_remove_forward_numbers_limit_description
+) {
 
     override val category = UiCategory.FUNCTION
 

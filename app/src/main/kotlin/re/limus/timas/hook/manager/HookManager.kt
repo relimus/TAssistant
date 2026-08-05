@@ -51,8 +51,8 @@ object HookManager {
 
         return HookItem(
             hook = hookInstance,
-            name = hookInstance.name,
-            description = hookInstance.description,
+            nameResId = hookInstance.nameResId,
+            descriptionResId = hookInstance.descriptionResId,
             category = hookInstance.category,
             needRestart = hookInstance.needRestart,
             isEnabled = isEnabled

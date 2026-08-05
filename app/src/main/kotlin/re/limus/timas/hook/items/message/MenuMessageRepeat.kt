@@ -13,11 +13,10 @@ import re.limus.timas.hook.items.message.core.RepeatMessageClickListener
 import top.sacz.xphelper.ext.callMethod
 
 @RegisterToUI
-object MenuMessageRepeat : SwitchHook(), OnMenuBuilder {
-
-    override val name = "在消息长按菜单添加复读"
-
-    override val description = "人类的本质是■■■"
+object MenuMessageRepeat : SwitchHook(
+    R.string.hook_menu_message_repeat_name,
+    R.string.hook_menu_message_repeat_description
+), OnMenuBuilder {
 
     override val category = UiCategory.MESSAGE
 
@@ -40,4 +39,3 @@ object MenuMessageRepeat : SwitchHook(), OnMenuBuilder {
         param.result = listOf(item) + param.result as List<*>
     }
 }
-

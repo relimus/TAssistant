@@ -2,6 +2,7 @@ package re.limus.timas.hook.items.message
 
 import android.content.Context
 import android.content.Intent
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.api.ContactUtils
@@ -12,11 +13,10 @@ import re.limus.timas.hook.utils.XLog
 import top.sacz.xphelper.ext.toClass
 
 @RegisterToUI
-object TroopSettingEssence : SwitchHook() {
-
-    override val name = "在 群聊设置 中添加 精华消息 入口"
-
-    override val description = "点击即可查看历史 精华消息"
+object TroopSettingEssence : SwitchHook(
+    R.string.hook_troop_setting_essence_name,
+    R.string.hook_troop_setting_essence_description
+) {
 
     override val category = UiCategory.MESSAGE
 

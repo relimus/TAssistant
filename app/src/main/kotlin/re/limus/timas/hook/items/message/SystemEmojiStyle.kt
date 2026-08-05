@@ -1,17 +1,17 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
 import top.sacz.xphelper.reflect.MethodUtils
 
 @RegisterToUI
-object SystemEmojiStyle : SwitchHook() {
-
-    override val name = "使用系统 Emoji 样式"
-
-    override val description = "如题所示"
+object SystemEmojiStyle : SwitchHook(
+    R.string.hook_system_emoji_style_name,
+    R.string.hook_system_emoji_style_description
+) {
 
     override val category = UiCategory.MESSAGE
 

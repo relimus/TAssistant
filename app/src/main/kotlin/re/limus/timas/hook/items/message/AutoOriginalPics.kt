@@ -1,17 +1,17 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
 import top.sacz.xphelper.ext.toMethod
 
 @RegisterToUI
-object AutoOriginalPics : SwitchHook() {
-
-    override val name = "自动发送原图"
-
-    override val description = "自动勾选发送原图按钮"
+object AutoOriginalPics : SwitchHook(
+    R.string.hook_auto_original_pics_name,
+    R.string.hook_auto_original_pics_description
+) {
 
     override val category = UiCategory.MESSAGE
 

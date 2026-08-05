@@ -24,6 +24,12 @@ TAssistant 是一个主要目的以促进 TIM体验 为主的 Xposed 模块
 - 欢迎提交 PR (你猜我为什么开源)
 - 本模块完全免费开源，没有任何收费，请勿二次贩卖
 
+### 多语言
+
+- UI 文案统一存放在 `app/src/main/res/values*/strings.xml`，请勿在 Hook 中硬编码。
+- `values-zh-rCN` 是文案语义源，默认 `values` 提供英语，并同步维护日语、韩语、俄语、香港繁体和台湾繁体。
+- 新增或修改文案时，请保持各语言资源键一致，并在 CJK 字符与英文字母之间留一个空格。
+
 ### 许可证
 
 - [GNU General Public License v3.0](https://github.com/relimus/TAssistant/blob/main/LICENSE.txt)

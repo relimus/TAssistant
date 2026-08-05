@@ -86,12 +86,12 @@ class HookAdapter(
          */
         fun bind(hookItem: HookItem) {
             // 设置标题和描述
-            titleView.text = hookItem.name
-            if (hookItem.description.isNullOrBlank()) {
+            titleView.setText(hookItem.nameResId)
+            if (hookItem.descriptionResId == null) {
                 summaryView.visibility = View.GONE
             } else {
                 summaryView.visibility = View.VISIBLE
-                summaryView.text = hookItem.description
+                summaryView.setText(hookItem.descriptionResId)
             }
 
             // 关键修复：先移除 listener，避免 ViewHolder 复用时触发不必要的回调

@@ -1,6 +1,7 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
@@ -8,13 +9,12 @@ import re.limus.timas.hook.utils.XLog
 import top.sacz.xphelper.dexkit.DexFinder
 
 @RegisterToUI
-object ForceMemberLevel : SwitchHook() {
+object ForceMemberLevel : SwitchHook(
+    R.string.hook_force_member_level_name,
+    R.string.hook_force_member_level_description
+) {
 
     private val rankComputationDepth = ThreadLocal<Int>()
-
-    override val name = "强制显示群员头衔"
-
-    override val description = "恢复 群成员等级与头衔 显示"
 
     override val category = UiCategory.MESSAGE
 

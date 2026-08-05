@@ -1,6 +1,7 @@
 package re.limus.timas.hook.items.message
 
 import android.content.Context
+import re.limus.timas.R
 import re.limus.timas.annotations.RegisterToUI
 import re.limus.timas.annotations.UiCategory
 import re.limus.timas.hook.base.SwitchHook
@@ -9,11 +10,10 @@ import top.sacz.xphelper.dexkit.DexFinder
 import top.sacz.xphelper.ext.toClass
 
 @RegisterToUI
-object ShowAccurateGaggedTime: SwitchHook() {
-
-    override val name = "显示更详细的禁言时间"
-
-    override val description = "禁言时间精确到秒"
+object ShowAccurateGaggedTime: SwitchHook(
+    R.string.hook_show_accurate_gagged_time_name,
+    R.string.hook_show_accurate_gagged_time_description
+) {
 
     override val category = UiCategory.MESSAGE
 

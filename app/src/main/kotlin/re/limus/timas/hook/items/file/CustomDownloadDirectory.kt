@@ -16,11 +16,10 @@ import top.sacz.xphelper.util.ConfigUtils
 import java.io.File
 
 @RegisterToUI
-object CustomDownloadDirectory : SwitchHook() {
-
-    override val name = "重定向文件下载目录"
-
-    override val description = "单击可自定义下载目录 (需重启)"
+object CustomDownloadDirectory : SwitchHook(
+    R.string.hook_custom_download_directory_name,
+    R.string.hook_custom_download_directory_description
+) {
 
     override val category = UiCategory.FILE
 
