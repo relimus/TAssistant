@@ -7,7 +7,7 @@ protobuf = "0.10.0"
 ksp = "2.3.11"
 
 coreKtx = "1.19.0"
-appcompat = "1.7.1"
+appcompat = "1.8.0"
 material = "1.14.0"
 
 # LSParanoid
