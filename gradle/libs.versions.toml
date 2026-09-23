@@ -6,7 +6,7 @@ kotlin = "2.4.20"
 protobuf = "0.10.0"
 ksp = "2.3.12"
 
-coreKtx = "1.19.0"
+coreKtx = "1.19.1"
 appcompat = "1.7.1"
 material = "1.14.0"
 
