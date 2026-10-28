@@ -1,7 +1,7 @@
 [versions]
 
 # Plugins
-agp = "9.4.1"
+agp = "9.5.0"
 kotlin = "2.4.21"
 protobuf = "0.10.0"
 ksp = "2.3.12"
